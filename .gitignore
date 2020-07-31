@@ -1,5 +1,0 @@
-*env*/
-*.pyc
-migrations/
-__pycache__/
-.idea/
