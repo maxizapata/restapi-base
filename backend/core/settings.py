@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +21,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'yrzcj@ug-miwk@awf-ar@4!cfqlsk)9__rg^37!88x+ref)nys'
+SECRET_KEY = '123123...asdasdasdasdasdasdasdasdasd'
+# SECRET_KEY = 'yrzcj@ug-miwk@awf-ar@4!cfqlsk)9__rg^37!88x+ref)nys'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,9 +41,10 @@ INSTALLED_APPS = [
     # 3rd party apps
     'phonenumber_field',
     'rest_framework',
-    'rest_framework.authtoken',
+    'channels',
     # Local apps
-    'accounts.apps.AccountConfig'
+    'accounts.apps.AccountConfig',
+    'trips.apps.TripsConfig',
 ]
 
 MIDDLEWARE = [
@@ -129,7 +132,7 @@ AUTH_USER_MODEL = 'accounts.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -139,3 +142,34 @@ REST_FRAMEWORK = {
 CELERY_BROKER_URL = 'amqp://localhost'
 
 TOKEN_EXPIRE_SECS = 300
+
+STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/pictures')
+
+MEDIA_URL = '/media/'
+
+KM_ALLOWED = 5
+
+##################
+## Async conf ##
+################
+
+
+REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [REDIS_URL],
+        },
+    },
+}
+
+ASGI_APPLICATION = 'core.routing.application'
+
+SIMPLE_JWT = {
+    'USER_ID_FIELD': 'id',
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=20)
+}

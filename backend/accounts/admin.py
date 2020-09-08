@@ -9,6 +9,7 @@ class UserAdmin(DefaultUserAdmin):
 
     list_display = ('username',
                     'email',
+                    'role',
                     'is_staff',
                     'is_active',
                     'mobile',

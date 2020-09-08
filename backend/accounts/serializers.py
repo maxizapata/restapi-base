@@ -45,7 +45,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         read_only_fields = ['id', 'verified_mobile']
-        fields = [
+        fields = (
             'id',
             'email',
             'mobile',
@@ -54,7 +54,7 @@ class UserSerializer(serializers.ModelSerializer):
             'role',
             'verified_mobile',
             'password1',
-            'password2']
+            'password2')
 
 
 class UpdateUserSerializer(serializers.ModelSerializer):

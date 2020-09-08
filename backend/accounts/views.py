@@ -41,8 +41,6 @@ class LoginView(ObtainAuthToken):
 
         user_data = {
             'id': user.pk,
-            'token': token.key,
-            'user_id': user.pk,
             'email': user.email,
             'first_name': user.first_name,
             'last_name': user.last_name,

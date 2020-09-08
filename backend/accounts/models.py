@@ -5,13 +5,14 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
-from random import randrange
 
 
+'''
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
+'''
 
 
 class User(AbstractUser):
@@ -26,11 +27,14 @@ class User(AbstractUser):
     mobile = PhoneNumberField(blank=False, null=False)
     verified_mobile = models.BooleanField(default=False)
     profile_pic = models.ImageField(upload_to='profile_pics')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     role = models.PositiveSmallIntegerField(
         choices=ROLE_CHOICES,
         null=False,
         blank=False
     )
+    channel_name = models.CharField(max_length=100)
 
     # Login and signup settings
     USERNAME_FIELD = 'email'
@@ -40,7 +44,9 @@ class User(AbstractUser):
         return self.email
 
     def get_mobile(self, plus=False):
-        return f'+{str(self.mobile.country_code)}{str(self.mobile.national_number)}'
+        country_code = str(self.mobile.country_code)
+        national_number = str(self.mobile.national_number)
+        return f'+{country_code}{national_number}'
 
     def get_token_header(self, auth=False):
         return f'Token {self.auth_token.key}'
